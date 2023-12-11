@@ -60,8 +60,6 @@ minDistance = 10
 
 corners = cv2.goodFeaturesToTrack(imgGrey, maxCorners, qualityLevel, minDistance)
 
-# i = np.intp(corners)
-
 # Loop through the corners and draw circles on the image
 for i in corners:
     x,y = i.ravel()
@@ -71,6 +69,19 @@ for i in corners:
 plt.subplot(2, 3, 4)
 plt.imshow(imgShiTomasi, cmap='gray')
 plt.title('Shi-Tomasi Corner Detection')
+plt.xticks([]), plt.yticks([])
+
+# Initiate ORB detector
+orb = cv2.ORB_create()
+# find the keypoints with ORB
+kp = orb.detect(imgIn,None)
+# compute the descriptors with ORB
+kp, des = orb.compute(imgIn, kp)
+# draw only keypoints location,not size and orientation
+img2 = cv2.drawKeypoints(imgIn, kp, None, color=(0,255,0), flags=0)
+plt.subplot(2, 3, 5)
+plt.imshow(img2)
+plt.title('ORB Keypoints')
 plt.xticks([]), plt.yticks([])
 
 plt.show()
