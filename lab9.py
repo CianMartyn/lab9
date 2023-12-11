@@ -4,15 +4,17 @@ from matplotlib import pyplot as plt
 
 imgIn = cv2.imread('ATU1.jpg')
 
+# Greyscale image
 imgGrey = cv2.cvtColor(imgIn, cv2.COLOR_BGR2GRAY)
 
-# Create a deep copy of the original image
+# Create copies of the original image
 imgHarris = imgIn.copy()
+imgShiTomasi = imgIn.copy() 
 
 # Create a figure to display the images
 plt.figure(figsize=(12, 8))
 
-# Create subplot: 2 rows, 2 columns
+# Create subplot
 plt.subplot(2, 3, 1)
 plt.imshow(cv2.cvtColor(imgIn, cv2.COLOR_BGR2RGB))
 plt.title('Original Image')
@@ -33,7 +35,7 @@ dst = cv2.cornerHarris(imgGrey, blockSize, aperture_size, k)
 # Dilate the detected corners to make them more visible
 dst = cv2.dilate(dst, None)
 
-# Define a threshold for corner detection (e.g., 0.01)
+# Threshold for corner detection
 threshold = 0.01
 
 # Get the maximum value in the dst matrix
@@ -43,7 +45,6 @@ max_value = dst.max()
 for i in range(len(dst)):
     for j in range(len(dst[i])):
         if dst[i][j] > (threshold * max_value):
-            # Set appropriate B, G, R values for the circle color (e.g., Red)
             cv2.circle(imgHarris, (j, i), 3, (0, 0, 255), -1)
 
 # Plot Harris corners
@@ -59,20 +60,17 @@ minDistance = 10
 
 corners = cv2.goodFeaturesToTrack(imgGrey, maxCorners, qualityLevel, minDistance)
 
-# Convert corners to integer coordinates
-corners = np.int0(corners)
+# i = np.intp(corners)
 
 # Loop through the corners and draw circles on the image
-for corner in corners:
-    x, y = corner.ravel()
-    cv2.circle(imgGrey, (x, y), 3, 255, -1) 
+for i in corners:
+    x,y = i.ravel()
+    cv2.circle(imgShiTomasi,(int(x),int(y)),3,(0, 0, 255),-1)
 
-# Plot Shi-Tomasi  image
+# Plot Shi-Tomasi image
 plt.subplot(2, 3, 4)
-plt.imshow(imgGrey, cmap='gray')
+plt.imshow(imgShiTomasi, cmap='gray')
 plt.title('Shi-Tomasi Corner Detection')
 plt.xticks([]), plt.yticks([])
-
-plt.show()
 
 plt.show()
